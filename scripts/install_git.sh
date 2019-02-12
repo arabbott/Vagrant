@@ -19,33 +19,5 @@
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-echo "Installing git from yum"
-sudo yum -y install git
-sudo updatedb
-
-gitcompletion=$(locate git-completion.bash)
-if [ -z "$gitcompletion" ]; then
-  echo "git-completion.bash file not found"
-  exit 1
-fi
-sudo chmod 755 $gitcompletion
-
-gitprompt=$(locate git-prompt.sh)
-if [ -z "$gitprompt" ]; then
-  echo "git-prompt.sh file not found"
-  exit 1
-fi
-sudo chmod 755 $gitprompt
-
-globalsource=/etc/profile.d/$(hostname -s).sh
-touch $globalsource
-chmod 755 $globalsource
-
-echo "Setting up global git environment"
-echo "source $gitcompletion" >> $globalsource
-echo "source $gitprompt" >> $globalsource
-echo "export GIT_PS1_SHOWDIRTYSTATE=1" >> $globalsource
-echo "export GIT_PS1_SHOWSTASHSTATE=1" >> $globalsource
-echo "export GIT_PS1_SHOWUPSTREAM=\"auto\"" >> $globalsource
-echo "export GIT_PS1_SHOWCOLORHINTS=1" >> $globalsource
-echo "PROMPT_COMMAND='__git_ps1 \"[\u@\h]:\w\" \"\\\$ \"'" >> $globalsource
+echo "Install latest git"
+sudo apt-get install -y git

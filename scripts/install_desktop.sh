@@ -6,14 +6,19 @@
 #
 
 function install_desktop() {
-    yum -y groupinstall "X Window System"
+    # apt-get -y groupinstall "X Window System"
 
     case "${1}" in
     "xfce")
-        yum -y groupinstall xfce
+        # apt-get -y groupinstall xfce
+        # Install xfce and virtualbox additions
+        sudo apt-get install -y xfce4 virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
+        # Permit anyone to start the GUI
+        # sudo touch /etc/X11/Xwrapper.config
+        # sudo sed -i 's/allowed_users=.*$/allowed_users=anybody/' /etc/X11/Xwrapper.config
         ;;
     "gnome")
-        yum -y install gnome-classic-session gnome-terminal nautilus-open-terminal control-center liberation-mono-fonts gdm
+        sudo apt-get install -y gnome-classic-session gnome-terminal nautilus-open-terminal control-center liberation-mono-fonts gdm
         systemctl enable gdm
         ;;
     *)

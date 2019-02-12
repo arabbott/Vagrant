@@ -1,10 +1,11 @@
 {
     "server": {
-        "box":"geerlingguy/centos7",
+        "box":"ubuntu/xenial64",
         "id" : "gnome1",
         "hostname": "gnome1",
-        "memory": 512,
-        "cpus":1,
+        "memory": 1024,
+        "cpus": 1,
+        "cpuExecutionCap": "50",
         "desktop": {
             "type":"gnome",
             "display":true

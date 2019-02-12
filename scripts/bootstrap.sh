@@ -30,17 +30,18 @@
 #sudo /etc/init.d/network restart
 
 #echo "Updating box image"
-sudo yum -y update
+#!/usr/bin/env bash
 
-echo "Installing Extra Package for Enterprise Linux (EPEL)"
-sudo yum -y install epel-release
+sudo apt-get update
 
-echo "Installing system utilities"
-sudo yum -y install pciutils
-sudo yum -y install policycoreutils policycoreutils-python
-sudo yum -y install wget unzip
-sudo yum -y install mlocate
-sudo yum -y install dkms
+echo "Install Node.js v11.x and npm v6.x"
+curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Install xfce and virtualbox additions
+sudo apt-get install -y xfce4 virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
+# Permit anyone to start the GUI
+# sudo sed -i 's/allowed_users=.*$/allowed_users=anybody/' /etc/X11/Xwrapper.config
 
 #echo "Installing VirtualBox repo"
 #cd /etc/yum.repos.d

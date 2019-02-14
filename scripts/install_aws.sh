@@ -37,6 +37,8 @@ fi
 echo "Downloading AWS CLI"
 wget -N $awszip --directory-prefix=$downloadLocation -nv
 
+sudo apt-get install -y unzip
+
 echo "Extracting AWS CLI $filename to /opt"
 filename=$(ls $downloadLocation | grep zip)
 unzip $downloadLocation/$filename -d $downloadLocation

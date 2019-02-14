@@ -1,8 +1,6 @@
 #!/bin/bash
 #
-# Copyright (C) 2019 thinh ho
-# This file is part of 'vagrant-sandbox' which is released under the MIT license.
-# See LICENSE at the project root directory.
+# Copyright 2019 Northstrat, Inc.
 #
 
 function install_desktop() {
@@ -10,7 +8,6 @@ function install_desktop() {
 
     case "${1}" in
     "xfce")
-        # apt-get -y groupinstall xfce
         # Install xfce and virtualbox additions
         sudo apt-get install -y xfce4 virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
         # Permit anyone to start the GUI
@@ -33,10 +30,3 @@ if [ ! -z "${1}" ]; then
     install_desktop "${1}"
     exit $?
 fi
-
-# systemctl get-default
-#    multi-user.target (non graphical)
-#    graphical.target (graphical)
-# systemctl set-default graphical.target
-# yum install gdm|lightdm
-# systemctl enable gdm|lightdm

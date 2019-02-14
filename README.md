@@ -1,4 +1,4 @@
-# Vagrant Sandbox
+# Northstrat Mobile App Vagrant Dev Machines
 
 Template for projects that utilize Vagrant.
 
@@ -10,11 +10,26 @@ Template for projects that utilize Vagrant.
 
 3. Oracle VM VirtualBox Extension Pack
 
-3. Clone/fork this project and navigate into checkout
+3. Clone/fork this project
 
-4. Execute `vagrant status` to see the available VM(s) (the base server is always available)
+    a. Also Clone/fork the following projects from GitLab into the same directory you cloned the `mobile-app-vagrant` project into, this step is important as Vagrant will set up folder sync on the guest machine to the projects below.  If these directories do not exist, `vagrant up` will fail:
+
+        1. app-web
+        2. app-mobile
+        3. app-services
+        4. mobileapp-awsdev
+
+4.  Navigate into `mobile-app-vagrant` checkout and execute `vagrant status` to see the available VM(s) (the base server is always available)
 
 5. Execute `vagrant up <vm>` to start the pre-built VM
+
+    a. when doing a `vagrant up` for either of the virtual desktop machines (xfce1 or gnome1), once `vagrant up` has finished,
+    do a `vagrant halt` and `vagrant up` again.  This only needs to be done for the virtual desktop machines and only needs to be done
+    when `vagrant up`ing the machine for the first time.
+
+    b. For `xfce1` once you log in following step 7, type `sudo startx` to start your virtual desktop.
+
+    c. For `gnome1` once you log in following step 7, type `gnome-session` to start your virtual desktop.
 
 6. Execute `vagrant ssh <vm>` to ssh into VM
 
@@ -26,7 +41,7 @@ Template for projects that utilize Vagrant.
 
 # Configurations
 
-1. Vagrant box image provided by [geerlingguy](https://atlas.hashicorp.com/geerlingguy/boxes/centos7)
+1. Vagrant box image provided by [ubuntu/xenial64](https://app.vagrantup.com/ubuntu/boxes/xenial64)
 
 2. Server configurations are json-based (a ton of examples online) - use `servers/base.json` as an example
 

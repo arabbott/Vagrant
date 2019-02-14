@@ -2,23 +2,7 @@
 # vi: set ft=ruby :
 
 #
-# Copyright 2017 kkdt
-# Permission is hereby granted, free of charge, to any person obtaining a copy of
-# this software and associated documentation files (the "Software"), to deal in
-# the Software without restriction, including without limitation the rights to use,
-# copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-# Software, and to permit persons to whom the Software is furnished to do so, subject
-# to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-# PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-# CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
-# OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Copyright 2019 Northstrat, Inc.
 #
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -26,6 +10,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+
     # The most common configuration options are documented and commented below.
     # For a complete reference, please see the online documentation at
     # https://docs.vagrantup.com.
@@ -41,7 +26,10 @@ Vagrant.configure("2") do |config|
     # the path on the host to the actual folder. The second argument is
     # the path on the guest to mount the folder. And the optional third
     # argument is a set of non-required options.
-    # config.vm.synced_folder "../data", "/vagrant_data"
+    config.vm.synced_folder "../app-web", "/app-web"
+    #config.vm.synced_folder "../app-mobile", "/app-mobile"
+    #config.vm.synced_folder "../app-services", "/app-services"
+    #config.vm.synced_folder "../mobileapp-awsdev", "/mobileapp-awsdev"
 
     # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
     # such as FTP and Heroku are also available. See the documentation at
@@ -57,12 +45,12 @@ Vagrant.configure("2") do |config|
     #   apt-get update
     #   apt-get install -y apache2
     # SHELL
+    config.vm.provision :shell, path: "scripts/bootstrap.sh"
     config.vm.provision :shell, path: "scripts/install_git.sh"
     #config.vm.provision :shell, path: "scripts/install_java.sh"
     #config.vm.provision :shell, path: "scripts/install_gradle.sh", args: ['3.5']
     #config.vm.provision :shell, path: "scripts/install_aws.sh"
     config.vm.provision :shell, path: "scripts/install_node.sh"
-    config.vm.network "forwarded_port", guest: 22, host: 2222, host_ip: "127.0.0.1", id: 'ssh'
 
     Dir.glob('servers/*.json') do |file|
         json = (JSON.parse(File.read(file)))['server']
@@ -70,16 +58,12 @@ Vagrant.configure("2") do |config|
         hostname = json['hostname']
         network = json['network']
         #memory = json['memory']
-        cpus = json['cpus']
         cpuExecutionCap = json['cpuExecutionCap']
+        cpus = json['cpus']
         desktop = json.has_key?("desktop") ? json["desktop"] : nil
         gui = !desktop.nil? && desktop.has_key?("display") ? desktop['display'] : false
         desktop_type = !desktop.nil? && desktop.has_key?("type") ? desktop['type'] : "gnome"
         aws = json.has_key?("aws") ? json["aws"] : nil
-
-        if gui
-            config.vm.provision :shell, path: "scripts/install_android.sh"
-        end
 
         # This little snippet will determine host memory size based on OS
         host = RbConfig::CONFIG['host_os']
@@ -98,7 +82,7 @@ Vagrant.configure("2") do |config|
 
         config.vm.define id do |server|
             
-            server.vm.box = json.has_key?('box') ? json['box'] : "geerlingguy/centos7"
+            server.vm.box = json.has_key?('box') ? json['box'] : "ubuntu/xenial64"
             server.vm.hostname = hostname
             server.vm.define id
 
@@ -123,10 +107,11 @@ Vagrant.configure("2") do |config|
             network['ports'].each do |p|
                 server.vm.network "forwarded_port", guest: p['guest'], host: p['host']
             end
-            server.vm.provision :shell, path: "scripts/bootstrap.sh"
+            
 
             if !desktop.nil? then
                 server.vm.provision :shell, path: "scripts/install_desktop.sh", args: [ "#{desktop_type}" ]
+                server.vm.provision :shell, path: "scripts/install_android.sh"
             end
 
             if !aws.nil? then
